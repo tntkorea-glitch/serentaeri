@@ -116,17 +116,8 @@ export default function ProductForm({ action, product, submitLabel }: Props) {
         />
       </Row>
 
-      <Row label="이미지 URL (줄바꿈으로 구분)">
-        <textarea
-          name="images"
-          defaultValue={product?.images.join("\n") ?? ""}
-          rows={4}
-          className="input font-mono text-sm"
-          placeholder={"https://example.com/img1.jpg\nhttps://example.com/img2.jpg"}
-        />
-        <p className="hint">
-          이미지 업로드는 다음 단계에서 Supabase Storage로 교체 예정. 지금은 URL 직접 입력.
-        </p>
+      <Row label="이미지">
+        <ImageUploader name="images" initialImages={product?.images ?? []} />
       </Row>
 
       <Row label="">
