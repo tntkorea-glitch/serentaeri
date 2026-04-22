@@ -1,0 +1,2 @@
+- [User profile](user_profile.md) — 사용자 기본 프로필 (역할, 선호 작업 스타일)
+- [Project init](project_init.md) — serentaeri 프로젝트 생성 정보 (포트, 스택, 레포)
