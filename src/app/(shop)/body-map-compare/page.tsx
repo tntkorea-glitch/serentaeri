@@ -3,13 +3,28 @@ import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import BodyMap from "@/components/body-map/BodyMap";
 
-// 사진 이미지(body-ref.jpg) 기준 핫스팟 좌표 — 상반신 해부도이므로 흉복부 장기만
-const PHOTO_HOTSPOTS = [
+// 이미지 B (상반신 해부도) 핫스팟 — 흉복부만
+const PHOTO_HOTSPOTS_B = [
   { slug: "lung",      name: "폐",   x: 30, y: 30 },
   { slug: "heart",     name: "심장", x: 55, y: 32 },
   { slug: "liver",     name: "간",   x: 38, y: 53 },
   { slug: "stomach",   name: "위",   x: 58, y: 55 },
   { slug: "intestine", name: "장",   x: 50, y: 72 },
+];
+
+// 이미지 C (Depositphotos 전신) 핫스팟 — 중앙 인체 기준 (이미지에서 인체가 차지하는 위치 대략)
+// 이미지 전체 비율 기준 (%)
+const PHOTO_HOTSPOTS_C = [
+  { slug: "scalp",      name: "두피", x: 50, y: 22 },
+  { slug: "eye",        name: "눈",   x: 50, y: 25 },
+  { slug: "neck",       name: "목",   x: 50, y: 32 },
+  { slug: "lung",       name: "폐",   x: 54, y: 40 },
+  { slug: "heart",      name: "심장", x: 47, y: 38 },
+  { slug: "liver",      name: "간",   x: 47, y: 50 },
+  { slug: "stomach",    name: "위",   x: 52, y: 50 },
+  { slug: "intestine",  name: "장",   x: 50, y: 60 },
+  { slug: "knee",       name: "무릎", x: 48, y: 82 },
+  { slug: "foot",       name: "발",   x: 50, y: 95 },
 ];
 
 export default async function BodyMapComparePage() {
@@ -19,82 +34,148 @@ export default async function BodyMapComparePage() {
     <div className="max-w-7xl mx-auto px-4 py-10">
       <header className="mb-8 text-center">
         <div className="inline-block text-xs font-semibold tracking-widest text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-full mb-3">
-          PREVIEW COMPARE
+          STYLE COMPARE
         </div>
         <h1 className="text-2xl md:text-3xl font-extrabold mb-2">
-          인체맵 스타일 비교
+          인체맵 스타일 3가지 비교
         </h1>
         <p className="text-sm text-gray-500">
-          좌(A): 자체 제작 SVG 해부도 · 우(B): 사진 기반 해부도 레퍼런스
+          어떤 느낌으로 갈지 골라줘. A는 지금 쓸 수 있고, B·C는 레퍼런스.
         </p>
       </header>
 
-      <div className="grid md:grid-cols-2 gap-10">
-        {/* Version A: SVG */}
-        <section className="bg-white rounded-2xl border border-gray-200 p-6">
-          <h2 className="text-lg font-bold mb-1">A. 자체 SVG 해부도</h2>
-          <p className="text-xs text-gray-500 mb-6">
-            전신 · 장기 5종 반투명 · 핫스팟 23개 · 저작권 100% 우리 것
-          </p>
-          <BodyMap parts={parts} />
-          <div className="mt-6 space-y-1 text-xs text-gray-500">
-            <p>✓ 전신(머리~발) 핫스팟 모두 배치 가능</p>
-            <p>✓ 해상도 자유 · 모바일 반응형</p>
-            <p>✓ 부위별 색상 조정 · 애니메이션 자유</p>
-            <p>× 사진만큼 사실적이지는 않음</p>
+      <div className="grid lg:grid-cols-3 gap-6">
+        {/* A: SVG */}
+        <section className="bg-white rounded-2xl border border-gray-200 p-5">
+          <div className="text-xs text-emerald-700 font-bold tracking-wider mb-1">
+            OPTION A
           </div>
+          <h2 className="text-lg font-bold mb-1">자체 SVG 해부도</h2>
+          <p className="text-[11px] text-gray-500 mb-4">
+            전신 · 장기 5종 반투명 · 저작권 100% 안전
+          </p>
+          <div className="flex items-center justify-center bg-gray-50 rounded-xl p-2 mb-4">
+            <BodyMap parts={parts} />
+          </div>
+          <ul className="text-[11px] text-gray-600 space-y-0.5">
+            <li>✓ 전신 핫스팟 23개 모두 배치</li>
+            <li>✓ 저작권 리스크 0</li>
+            <li>✓ 지금 바로 사용 가능</li>
+            <li>× 사실적 사진만큼 디테일 X</li>
+          </ul>
         </section>
 
-        {/* Version B: Photo */}
-        <section className="bg-white rounded-2xl border border-gray-200 p-6">
-          <h2 className="text-lg font-bold mb-1">B. 사진 기반 해부도</h2>
-          <p className="text-xs text-gray-500 mb-6">
-            상반신만 · 독일어 라벨 박혀있음 · 저작권 불명
+        {/* B: 독일어 상반신 */}
+        <section className="bg-white rounded-2xl border border-gray-200 p-5">
+          <div className="text-xs text-orange-700 font-bold tracking-wider mb-1">
+            OPTION B · 참고용
+          </div>
+          <h2 className="text-lg font-bold mb-1">사진 해부도 (상반신)</h2>
+          <p className="text-[11px] text-gray-500 mb-4">
+            네이버 블로그 이미지 · 독일어 라벨 · 저작권 불명
           </p>
-
           <div
-            className="relative w-full max-w-xs mx-auto"
+            className="relative w-full max-w-[240px] mx-auto bg-white rounded-lg overflow-hidden mb-4"
             style={{ aspectRatio: "960 / 832" }}
           >
             <Image
               src="/body-ref.jpg"
-              alt="Anatomy reference"
+              alt="Anatomy ref B"
               fill
-              className="object-contain rounded-lg"
+              className="object-contain"
               unoptimized
             />
-            {PHOTO_HOTSPOTS.map((h) => (
+            {PHOTO_HOTSPOTS_B.map((h) => (
               <Link
                 key={h.slug}
                 href={`/body-map/${h.slug}`}
                 className="group absolute -translate-x-1/2 -translate-y-1/2 z-10"
                 style={{ left: `${h.x}%`, top: `${h.y}%` }}
-                aria-label={h.name}
               >
                 <span className="absolute inset-0 -m-1 rounded-full bg-emerald-400 opacity-60 animate-ping" />
-                <span className="relative block w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white shadow-md group-hover:scale-125 transition" />
-                <span className="absolute left-1/2 -translate-x-1/2 top-full mt-2 whitespace-nowrap px-2 py-1 rounded-md bg-gray-900 text-white text-[10px] font-medium opacity-0 group-hover:opacity-100 transition pointer-events-none">
-                  {h.name}
-                </span>
+                <span className="relative block w-3 h-3 rounded-full bg-emerald-500 border-2 border-white shadow-md" />
               </Link>
             ))}
           </div>
+          <ul className="text-[11px] text-gray-600 space-y-0.5">
+            <li>✓ 진짜 사진처럼 사실적</li>
+            <li>× 상반신만 — 머리/다리 없음</li>
+            <li>× 독일어 라벨 박혀있음</li>
+            <li>× 저작권 불명 — 사용 불가</li>
+          </ul>
+        </section>
 
-          <div className="mt-6 space-y-1 text-xs text-gray-500">
-            <p>✓ 진짜 해부학 이미지처럼 사실적</p>
-            <p>✓ 혈관·장기 세부 표현</p>
-            <p>× 머리/다리 없음 — 부위 절반만 표현 가능</p>
-            <p>× 독일어 라벨이 이미지에 박혀있음</p>
-            <p>× 저작권 문제로 실제 사용 불가 (참고용)</p>
+        {/* C: Depositphotos 전신 */}
+        <section className="bg-white rounded-2xl border border-gray-200 p-5">
+          <div className="text-xs text-orange-700 font-bold tracking-wider mb-1">
+            OPTION C · 참고용
           </div>
+          <h2 className="text-lg font-bold mb-1">스톡 일러스트 (전신)</h2>
+          <p className="text-[11px] text-gray-500 mb-4">
+            Depositphotos 유료 스톡 · 영어 라벨
+          </p>
+          <div
+            className="relative w-full max-w-[240px] mx-auto bg-white rounded-lg overflow-hidden mb-4"
+            style={{ aspectRatio: "1 / 1" }}
+          >
+            <Image
+              src="/body-ref2.jpg"
+              alt="Anatomy ref C"
+              fill
+              className="object-contain"
+              unoptimized
+            />
+            {PHOTO_HOTSPOTS_C.map((h) => (
+              <Link
+                key={h.slug}
+                href={`/body-map/${h.slug}`}
+                className="group absolute -translate-x-1/2 -translate-y-1/2 z-10"
+                style={{ left: `${h.x}%`, top: `${h.y}%` }}
+              >
+                <span className="absolute inset-0 -m-1 rounded-full bg-amber-400 opacity-70 animate-ping" />
+                <span className="relative block w-3 h-3 rounded-full bg-amber-500 border-2 border-white shadow-md" />
+              </Link>
+            ))}
+          </div>
+          <ul className="text-[11px] text-gray-600 space-y-0.5">
+            <li>✓ 전신 + 리얼 장기 표현</li>
+            <li>× 스톡 이미지 (라이선스 구매 필요, ~$15)</li>
+            <li>× 주변 장기 일러스트와 핫스팟 겹침</li>
+            <li>× 영어 라벨 박혀있음</li>
+          </ul>
         </section>
       </div>
 
-      <div className="mt-10 rounded-xl bg-amber-50 border border-amber-100 p-5 text-sm text-amber-900 leading-relaxed">
-        <strong>결정 도움말:</strong> A가 지금 바로 쓸 수 있음. B 스타일 원하면{" "}
-        <span className="font-semibold">저작권 깨끗한 전신 해부도</span>를 구해야 함
-        — Wikimedia Commons에서 공개 라이선스 이미지를 찾거나, A의 현재 SVG를 더
-        정교하게 다듬는 것도 가능. 원하는 방향 알려줘.
+      <div className="mt-10 rounded-xl bg-amber-50 border border-amber-200 p-6">
+        <h3 className="text-base font-bold text-amber-900 mb-3">어떻게 할까?</h3>
+        <div className="space-y-2 text-sm text-amber-900 leading-relaxed">
+          <p>
+            <strong>① A 그대로 쓰기</strong> — 지금 바로 출시 가능. 나중에 C처럼
+            정교한 버전으로 교체 가능.
+          </p>
+          <p>
+            <strong>② C 스타일 라이선스 구매 후 사용</strong> — Depositphotos에서
+            구매(~$15~30) → 라벨 없는 버전 받기 → 영어 라벨 포토샵으로 제거 또는
+            라벨 없는 원본 요청.
+          </p>
+          <p>
+            <strong>③ C 스타일을 자체 SVG로 재현</strong> — 시간 3~5시간, 결과물은
+            저작권 100% 우리 것. A보다 훨씬 정교하게 다듬음.
+          </p>
+          <p>
+            <strong>④ Wikimedia/공개 이미지 탐색</strong> — CC0 라이선스 전신
+            해부도 찾아 사용. 운에 따라 품질 차이.
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-4 text-center">
+        <Link
+          href="/body-map"
+          className="inline-block text-sm text-gray-500 hover:text-gray-900"
+        >
+          ← 기본 /body-map 으로
+        </Link>
       </div>
     </div>
   );
