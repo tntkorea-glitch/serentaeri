@@ -1,5 +1,6 @@
 import { Product, ProductCategory } from "@prisma/client";
 import { PRODUCT_CATEGORY_LABEL } from "@/lib/constants";
+import ImageUploader from "@/components/ImageUploader";
 
 type Props = {
   action: (formData: FormData) => void | Promise<void>;
