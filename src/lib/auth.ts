@@ -1,8 +1,11 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { prisma } from "./prisma";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
   pages: { signIn: "/login" },
   providers: [
@@ -13,32 +16,30 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         email: { label: "이메일", type: "email" },
         password: { label: "비밀번호", type: "password" },
       },
-      authorize: async (credentials) => {
-        const email = credentials?.email as string | undefined;
-        const password = credentials?.password as string | undefined;
-        if (!email || !password) return null;
-
-        // TODO: DB 연동 시 실제 사용자 조회 로직으로 교체
+      authorize: async () => {
+        // TODO: 이메일/비번 회원가입 구현 후 bcrypt 비교 로직 추가
         return null;
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.id = user.id;
+      if (user?.id) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: user.id },
+          select: { role: true },
+        });
+        token.id = user.id;
+        token.role = dbUser?.role ?? "CUSTOMER";
+      }
       return token;
     },
     async session({ session, token }) {
-      if (session.user && token.id) {
-        (session.user as { id?: string }).id = token.id as string;
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.role = token.role as "CUSTOMER" | "ADMIN";
       }
       return session;
-    },
-    async signIn({ account, user }) {
-      if (account?.provider === "google" && user.email) {
-        // TODO: 구글 첫 로그인 시 DB에 유저 생성/조회
-      }
-      return true;
     },
   },
 });
