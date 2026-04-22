@@ -87,9 +87,15 @@ export async function DELETE(request: Request) {
     );
   }
 
-  const { path } = (await request.json()) as { path?: string };
+  const body = (await request.json()) as { path?: string; url?: string };
+  let path = body.path;
+  if (!path && body.url) {
+    const marker = `/object/public/${STORAGE_BUCKET}/`;
+    const idx = body.url.indexOf(marker);
+    if (idx >= 0) path = body.url.substring(idx + marker.length);
+  }
   if (!path) {
-    return NextResponse.json({ error: "path 필요" }, { status: 400 });
+    return NextResponse.json({ error: "path 또는 url 필요" }, { status: 400 });
   }
 
   const { error } = await supabaseAdmin.storage
