@@ -1,13 +1,267 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// =========================================
+// Auth.js (NextAuth v5) — PrismaAdapter 호환
+// =========================================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  role          UserRole  @default(CUSTOMER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts  Account[]
+  sessions  Session[]
+  favorites Favorite[]
+  orders    Order[]
+  cartItems CartItem[]
+}
+
+enum UserRole {
+  CUSTOMER
+  ADMIN
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// =========================================
+// 커머스 도메인
+// =========================================
+
+model Product {
+  id             String          @id @default(cuid())
+  slug           String          @unique
+  name           String
+  nameEn         String?
+  sku            String?         @unique
+  category       ProductCategory
+  price          Int
+  compareAtPrice Int?
+  stock          Int             @default(0)
+  volume         String?
+  description    String?         @db.Text
+  images         String[]
+  isPublished    Boolean         @default(false)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  recipeIngredients RecipeIngredient[]
+  cartItems         CartItem[]
+  orderItems        OrderItem[]
+  favorites         Favorite[]
+}
+
+enum ProductCategory {
+  SINGLE_OIL
+  BLEND_OIL
+  NUTRITION
+  SKINCARE
+  HAIR_BODY
+  COLLECTION
+  ACCESSORY
+}
+
+model BodyPart {
+  id          String           @id @default(cuid())
+  slug        String           @unique
+  name        String
+  category    BodyPartCategory
+  description String?          @db.Text
+  hotspotX    Float?
+  hotspotY    Float?
+  view        BodyView         @default(FRONT)
+  order       Int              @default(0)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  recipes BodyPartRecipe[]
+}
+
+enum BodyPartCategory {
+  HEAD
+  UPPER
+  DIGESTIVE
+  LOWER
+  SKIN
+  EMOTION
+}
+
+enum BodyView {
+  FRONT
+  BACK
+}
+
+model Recipe {
+  id          String      @id @default(cuid())
+  slug        String      @unique
+  title       String
+  summary     String?     @db.Text
+  method      String      @db.Text
+  usage       RecipeUsage
+  cautions    String?     @db.Text
+  disclaimer  String      @default("본 콘텐츠는 일반 정보 제공 목적이며 의학적 진단·치료·예방을 대체하지 않습니다.")
+  isPublished Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  ingredients RecipeIngredient[]
+  bodyParts   BodyPartRecipe[]
+  favorites   Favorite[]
+}
+
+enum RecipeUsage {
+  DIFFUSER
+  ROLL_ON
+  MASSAGE
+  INHALE
+  BATH
+  TOPICAL
+}
+
+model RecipeIngredient {
+  id        String  @id @default(cuid())
+  recipeId  String
+  productId String
+  dropCount String?
+  note      String?
+  order     Int     @default(0)
+
+  recipe  Recipe  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@unique([recipeId, productId])
+}
+
+model BodyPartRecipe {
+  id         String @id @default(cuid())
+  bodyPartId String
+  recipeId   String
+  order      Int    @default(0)
+
+  bodyPart BodyPart @relation(fields: [bodyPartId], references: [id], onDelete: Cascade)
+  recipe   Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@unique([bodyPartId, recipeId])
+}
+
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String?
+  recipeId  String?
+  createdAt DateTime @default(now())
+
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  recipe  Recipe?  @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@unique([userId, recipeId])
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@unique([userId, productId])
+}
+
+model Order {
+  id             String      @id @default(cuid())
+  orderNumber    String      @unique
+  userId         String
+  status         OrderStatus @default(PENDING)
+  totalPrice     Int
+  shippingFee    Int         @default(0)
+  paymentKey     String?
+  paymentMethod  String?
+  paidAt         DateTime?
+  receiverName   String
+  receiverPhone  String
+  postalCode     String
+  address1       String
+  address2       String?
+  memo           String?
+  trackingNumber String?
+  shippedAt      DateTime?
+  deliveredAt    DateTime?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  user  User        @relation(fields: [userId], references: [id])
+  items OrderItem[]
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  PREPARING
+  SHIPPING
+  DELIVERED
+  CANCELED
+  REFUNDED
+}
+
+model OrderItem {
+  id          String @id @default(cuid())
+  orderId     String
+  productId   String
+  quantity    Int
+  price       Int
+  productName String
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
 }
