@@ -42,4 +42,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session;
     },
   },
+  events: {
+    async signIn({ user }) {
+      const adminEmails = (process.env.ADMIN_EMAILS ?? "")
+        .split(",")
+        .map((e) => e.trim().toLowerCase())
+        .filter(Boolean);
+      if (
+        user.email &&
+        user.id &&
+        adminEmails.includes(user.email.toLowerCase())
+      ) {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { role: "ADMIN" },
+        });
+      }
+    },
+  },
 });
