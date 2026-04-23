@@ -1,10 +1,34 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import type { BodyPartGender } from "@prisma/client";
+import { redirect } from "next/navigation";
+import type {
+  BodyPartCategory,
+  BodyPartGender,
+  BodyView,
+} from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { BODY_PART_SEED } from "./seed-data";
+
+const CATEGORIES: readonly BodyPartCategory[] = [
+  "HEAD",
+  "UPPER",
+  "DIGESTIVE",
+  "LOWER",
+  "SKIN",
+  "EMOTION",
+];
+const VIEWS: readonly BodyView[] = ["FRONT", "BACK"];
+const GENDERS: readonly BodyPartGender[] = ["BOTH", "FEMALE", "MALE"];
+
+function parseOptionalNumber(raw: FormDataEntryValue | null) {
+  if (raw === null) return null;
+  const str = String(raw).trim();
+  if (str === "") return null;
+  const n = Number(str);
+  return Number.isFinite(n) ? n : null;
+}
 
 async function requireAdmin() {
   const session = await auth();
