@@ -46,7 +46,7 @@ export default function BodyMapWiki({ parts, activeSlug, gender }: Props) {
         return (
           <Link
             key={p.id}
-            href={`/body-map/${p.slug}`}
+            href={`/body-map/${p.slug}?gender=${gender}`}
             className="group absolute -translate-x-1/2 -translate-y-1/2 z-10"
             style={{ left: `${x}%`, top: `${y}%` }}
             aria-label={p.name}
