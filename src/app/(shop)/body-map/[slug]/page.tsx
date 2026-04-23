@@ -56,7 +56,7 @@ export default async function BodyPartDetailPage({
   return (
     <div className="max-w-6xl mx-auto px-4 py-12">
       <Link
-        href="/body-map"
+        href={`/body-map?gender=${gender}`}
         className="text-xs text-gray-500 hover:text-gray-900"
       >
         ← 인체맵으로
@@ -65,7 +65,7 @@ export default async function BodyPartDetailPage({
       <div className="grid lg:grid-cols-2 gap-10 mt-4">
         {/* Left: body map with active part */}
         <div className="order-2 lg:order-1">
-          <BodyMap parts={allParts} activeSlug={part.slug} />
+          <BodyMap parts={allParts} activeSlug={part.slug} initialGender={gender} />
         </div>
 
         {/* Right: part info + recipes */}
