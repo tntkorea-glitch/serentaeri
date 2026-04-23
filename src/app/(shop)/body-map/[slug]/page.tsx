@@ -65,16 +65,54 @@ export default async function BodyPartDetailPage({
 
         {/* Right: part info + recipes */}
         <div className="order-1 lg:order-2">
-          <div className="text-xs text-emerald-700 font-semibold tracking-widest mb-2">
-            {BODY_PART_CATEGORY_LABEL[part.category]}
+          <div className="flex items-center gap-2 mb-2 flex-wrap">
+            <span className="text-xs text-emerald-700 font-semibold tracking-widest">
+              {BODY_PART_CATEGORY_LABEL[part.category]}
+            </span>
+            {part.gender !== "BOTH" && (
+              <span
+                className={`inline-flex items-center text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+                  part.gender === "FEMALE"
+                    ? "bg-pink-100 text-pink-700"
+                    : "bg-sky-100 text-sky-700"
+                }`}
+              >
+                {BODY_PART_GENDER_LABEL[part.gender]} 전용
+              </span>
+            )}
           </div>
           <h1 className="text-3xl md:text-4xl font-extrabold mb-3">
             {part.name}
           </h1>
           {part.description && (
-            <p className="text-gray-600 leading-relaxed mb-8">
+            <p className="text-gray-600 leading-relaxed mb-6">
               {part.description}
             </p>
+          )}
+
+          {(part.femaleNote || part.maleNote) && (
+            <div className="space-y-3 mb-8">
+              {part.femaleNote && (
+                <div className="rounded-xl border border-pink-100 bg-pink-50/60 px-4 py-3">
+                  <div className="text-[11px] font-bold text-pink-700 tracking-widest mb-1">
+                    여성
+                  </div>
+                  <p className="text-sm text-pink-900/90 leading-relaxed">
+                    {part.femaleNote}
+                  </p>
+                </div>
+              )}
+              {part.maleNote && (
+                <div className="rounded-xl border border-sky-100 bg-sky-50/60 px-4 py-3">
+                  <div className="text-[11px] font-bold text-sky-700 tracking-widest mb-1">
+                    남성
+                  </div>
+                  <p className="text-sm text-sky-900/90 leading-relaxed">
+                    {part.maleNote}
+                  </p>
+                </div>
+              )}
+            </div>
           )}
 
           <h2 className="text-lg font-bold mb-4">
