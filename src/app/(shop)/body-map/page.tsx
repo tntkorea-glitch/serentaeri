@@ -63,7 +63,7 @@ export default async function BodyMapPage({
                     {items.map((p) => (
                       <Link
                         key={p.id}
-                        href={`/body-map/${p.slug}`}
+                        href={`/body-map/${p.slug}?gender=${gender}`}
                         className="rounded-xl border border-gray-200 bg-white p-4 hover:border-gray-900 hover:shadow-sm transition"
                       >
                         <div className="flex items-center gap-1.5 mb-1">
