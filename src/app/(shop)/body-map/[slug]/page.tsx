@@ -14,10 +14,15 @@ type Params = Promise<{ slug: string }>;
 
 export default async function BodyPartDetailPage({
   params,
+  searchParams,
 }: {
   params: Params;
+  searchParams: Promise<{ gender?: string }>;
 }) {
   const { slug } = await params;
+  const { gender: genderParam } = await searchParams;
+  const gender: "female" | "male" =
+    genderParam === "male" ? "male" : "female";
 
   const part = await prisma.bodyPart.findUnique({
     where: { slug },
