@@ -139,6 +139,12 @@ enum BodyView {
   BACK
 }
 
+enum BodyPartGender {
+  BOTH
+  FEMALE
+  MALE
+}
+
 model Recipe {
   id          String      @id @default(cuid())
   slug        String      @unique
