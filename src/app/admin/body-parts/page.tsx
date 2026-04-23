@@ -47,6 +47,179 @@ export default async function AdminBodyPartsPage() {
         </form>
       </div>
 
+      {/* 새 부위 추가 */}
+      <details className="mb-6 bg-white rounded-lg border border-gray-200 group">
+        <summary className="px-4 py-3 text-sm font-semibold text-gray-900 cursor-pointer hover:bg-gray-50 list-none flex items-center justify-between">
+          <span>＋ 새 부위 추가</span>
+          <span className="text-xs text-gray-400 group-open:hidden">
+            (클릭하여 펼치기)
+          </span>
+        </summary>
+        <div className="px-4 pb-5 border-t border-gray-100">
+          <form action={createBodyPartAction} className="space-y-4 pt-4">
+            <div className="grid md:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[11px] font-semibold text-gray-500 tracking-widest uppercase mb-1">
+                  이름 *
+                </label>
+                <input
+                  name="name"
+                  required
+                  placeholder="예: 생리·PMS"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:border-emerald-400 focus:ring-1 focus:ring-emerald-200 outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-semibold text-gray-500 tracking-widest uppercase mb-1">
+                  슬러그 * <span className="text-gray-400 font-normal normal-case">(영소문자/숫자/-)</span>
+                </label>
+                <input
+                  name="slug"
+                  required
+                  pattern="[a-z0-9-]+"
+                  placeholder="예: menstrual"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-mono focus:border-emerald-400 focus:ring-1 focus:ring-emerald-200 outline-none"
+                />
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-3">
+              <div>
+                <label className="block text-[11px] font-semibold text-gray-500 tracking-widest uppercase mb-1">
+                  카테고리 *
+                </label>
+                <select
+                  name="category"
+                  required
+                  defaultValue=""
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:border-emerald-400 focus:ring-1 focus:ring-emerald-200 outline-none bg-white"
+                >
+                  <option value="" disabled>
+                    선택
+                  </option>
+                  {CATEGORY_OPTIONS.map(([key, label]) => (
+                    <option key={key} value={key}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-semibold text-gray-500 tracking-widest uppercase mb-1">
+                  성별 *
+                </label>
+                <select
+                  name="gender"
+                  defaultValue="BOTH"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:border-emerald-400 focus:ring-1 focus:ring-emerald-200 outline-none bg-white"
+                >
+                  <option value="BOTH">남녀 공통</option>
+                  <option value="FEMALE">여성 전용</option>
+                  <option value="MALE">남성 전용</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-semibold text-gray-500 tracking-widest uppercase mb-1">
+                  뷰
+                </label>
+                <select
+                  name="view"
+                  defaultValue="FRONT"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:border-emerald-400 focus:ring-1 focus:ring-emerald-200 outline-none bg-white"
+                >
+                  <option value="FRONT">정면</option>
+                  <option value="BACK">후면</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[11px] font-semibold text-gray-500 tracking-widest uppercase mb-1">
+                  핫스팟 X <span className="text-gray-400 font-normal normal-case">(0~100, 비워두면 맵에 미표시)</span>
+                </label>
+                <input
+                  name="hotspotX"
+                  type="number"
+                  step="0.1"
+                  min="0"
+                  max="100"
+                  placeholder="비움"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:border-emerald-400 focus:ring-1 focus:ring-emerald-200 outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-semibold text-gray-500 tracking-widest uppercase mb-1">
+                  핫스팟 Y <span className="text-gray-400 font-normal normal-case">(0~180)</span>
+                </label>
+                <input
+                  name="hotspotY"
+                  type="number"
+                  step="0.1"
+                  min="0"
+                  max="180"
+                  placeholder="비움"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:border-emerald-400 focus:ring-1 focus:ring-emerald-200 outline-none"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-semibold text-gray-500 tracking-widest uppercase mb-1">
+                설명 <span className="text-gray-400 font-normal normal-case">(짧게 한 줄)</span>
+              </label>
+              <input
+                name="description"
+                placeholder="예: 주기 관련 하복부 긴장, 기분 기복"
+                className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:border-emerald-400 focus:ring-1 focus:ring-emerald-200 outline-none"
+              />
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[11px] font-semibold text-pink-700 tracking-widest uppercase mb-1">
+                  여성 노트
+                </label>
+                <textarea
+                  name="femaleNote"
+                  rows={2}
+                  placeholder="선택. 여성 관점 보충 설명."
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:border-pink-400 focus:ring-1 focus:ring-pink-200 outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-[11px] font-semibold text-sky-700 tracking-widest uppercase mb-1">
+                  남성 노트
+                </label>
+                <textarea
+                  name="maleNote"
+                  rows={2}
+                  placeholder="선택. 남성 관점 보충 설명."
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:border-sky-400 focus:ring-1 focus:ring-sky-200 outline-none"
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                type="reset"
+                className="px-4 h-9 bg-white border border-gray-200 text-gray-600 text-sm font-semibold rounded-lg hover:bg-gray-50"
+              >
+                초기화
+              </button>
+              <button
+                type="submit"
+                className="px-4 h-9 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700"
+              >
+                부위 추가
+              </button>
+            </div>
+          </form>
+        </div>
+      </details>
+
       {parts.length === 0 ? (
         <div className="bg-white rounded-lg border border-dashed border-gray-300 p-12 text-center text-gray-500 text-sm">
           아직 등록된 부위가 없어요. 우측 「기본 부위 시드」로 초기 데이터를 넣으세요.
