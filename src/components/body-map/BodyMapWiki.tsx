@@ -32,27 +32,27 @@ const FEMALE_OVERRIDES: Record<string, { x: number; y: number }> = {
   foot:       { x: 38, y: 96 },
 };
 
-// Wikimedia CC0 male template (viewBox 크롭 820 x 1211) 기준 핫스팟 좌표 (%)
+// Wikimedia 202403 male/neutral full-body (600 x 1000) 기준 핫스팟 좌표 (%)
 // 초기 추정치. 추후 정교하게 조정 예정.
 const MALE_OVERRIDES: Record<string, { x: number; y: number }> = {
-  scalp:      { x: 50, y: 5 },
-  eye:        { x: 50, y: 10 },
-  ear:        { x: 43, y: 12 },
-  nose:       { x: 50, y: 13 },
-  mouth:      { x: 50, y: 16 },
-  "face-skin": { x: 50, y: 10 },
-  neck:       { x: 50, y: 20 },
-  shoulder:   { x: 34, y: 26 },
-  lung:       { x: 42, y: 34 },
-  heart:      { x: 54, y: 36 },
-  arm:        { x: 24, y: 42 },
-  stomach:    { x: 55, y: 47 },
-  liver:      { x: 42, y: 46 },
-  intestine:  { x: 50, y: 56 },
-  "lower-back": { x: 50, y: 62 },
-  "hand-skin": { x: 18, y: 60 },
-  knee:       { x: 46, y: 82 },
-  foot:       { x: 48, y: 97 },
+  scalp:      { x: 50, y: 4 },
+  eye:        { x: 50, y: 7 },
+  ear:        { x: 43, y: 8 },
+  nose:       { x: 50, y: 9 },
+  mouth:      { x: 50, y: 11 },
+  "face-skin": { x: 50, y: 7 },
+  neck:       { x: 50, y: 15 },
+  shoulder:   { x: 33, y: 20 },
+  lung:       { x: 42, y: 26 },
+  heart:      { x: 54, y: 27 },
+  arm:        { x: 25, y: 33 },
+  stomach:    { x: 55, y: 38 },
+  liver:      { x: 42, y: 36 },
+  intestine:  { x: 50, y: 44 },
+  "lower-back": { x: 50, y: 49 },
+  "hand-skin": { x: 22, y: 46 },
+  knee:       { x: 45, y: 75 },
+  foot:       { x: 47, y: 97 },
 };
 
 const GENDER_CONFIG: Record<
@@ -66,7 +66,7 @@ const GENDER_CONFIG: Record<
   },
   male: {
     src: "/body-wikimedia-male.svg",
-    aspectRatio: "820 / 1211",
+    aspectRatio: "600 / 1000",
     overrides: MALE_OVERRIDES,
   },
 };
