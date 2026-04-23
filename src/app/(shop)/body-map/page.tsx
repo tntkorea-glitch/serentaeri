@@ -96,17 +96,6 @@ export default async function BodyMapPage() {
         있으면 반드시 의료 전문가와 상의하세요.
       </div>
 
-      <p className="mt-4 text-[11px] text-gray-400 text-center leading-relaxed">
-        인체 일러스트:{" "}
-        <a
-          href="https://commons.wikimedia.org/wiki/File:Female_template_with_organs.svg"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline hover:text-gray-600"
-        >
-          Wikimedia Commons (CC0) · Mikael Häggström
-        </a>
-      </p>
     </div>
   );
 }
