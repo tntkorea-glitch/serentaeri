@@ -38,7 +38,7 @@ export default async function BodyMapPage() {
         <>
           {/* 인체 맵 */}
           <div className="mb-16">
-            <BodyMapSection parts={parts} />
+            <BodyMap parts={parts} />
           </div>
 
           {/* 좌표 없는 카테고리 (정서/수면, 피부 전신 등) */}
