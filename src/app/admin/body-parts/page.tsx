@@ -282,55 +282,149 @@ export default async function AdminBodyPartsPage() {
                   <form
                     action={async (formData: FormData) => {
                       "use server";
-                      await updateBodyPartGenderAction(p.id, formData);
+                      await updateBodyPartAction(p.id, formData);
                     }}
                     className="space-y-3"
                   >
-                    <div>
-                      <label className="block text-[11px] font-semibold text-gray-500 tracking-widest uppercase mb-1">
-                        성별 노출
-                      </label>
-                      <div className="flex gap-2">
-                        {(["BOTH", "FEMALE", "MALE"] as const).map((g) => (
-                          <label
-                            key={g}
-                            className="inline-flex items-center gap-1.5 text-sm"
-                          >
-                            <input
-                              type="radio"
-                              name="gender"
-                              value={g}
-                              defaultChecked={p.gender === g}
-                              className="accent-emerald-600"
-                            />
-                            <span>{BODY_PART_GENDER_LABEL[g]}</span>
-                          </label>
-                        ))}
+                    <div className="grid md:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[11px] font-semibold text-gray-500 tracking-widest uppercase mb-1">
+                          이름 *
+                        </label>
+                        <input
+                          name="name"
+                          required
+                          defaultValue={p.name}
+                          className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:border-emerald-400 focus:ring-1 focus:ring-emerald-200 outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-semibold text-gray-500 tracking-widest uppercase mb-1">
+                          슬러그 * <span className="text-gray-400 font-normal normal-case">(URL에 사용됨, 신중히)</span>
+                        </label>
+                        <input
+                          name="slug"
+                          required
+                          pattern="[a-z0-9-]+"
+                          defaultValue={p.slug}
+                          className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-mono focus:border-emerald-400 focus:ring-1 focus:ring-emerald-200 outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-3 gap-3">
+                      <div>
+                        <label className="block text-[11px] font-semibold text-gray-500 tracking-widest uppercase mb-1">
+                          카테고리 *
+                        </label>
+                        <select
+                          name="category"
+                          defaultValue={p.category}
+                          className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:border-emerald-400 focus:ring-1 focus:ring-emerald-200 outline-none"
+                        >
+                          {CATEGORY_OPTIONS.map(([key, label]) => (
+                            <option key={key} value={key}>
+                              {label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-semibold text-gray-500 tracking-widest uppercase mb-1">
+                          성별
+                        </label>
+                        <select
+                          name="gender"
+                          defaultValue={p.gender}
+                          className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:border-emerald-400 focus:ring-1 focus:ring-emerald-200 outline-none"
+                        >
+                          <option value="BOTH">{BODY_PART_GENDER_LABEL.BOTH}</option>
+                          <option value="FEMALE">{BODY_PART_GENDER_LABEL.FEMALE} 전용</option>
+                          <option value="MALE">{BODY_PART_GENDER_LABEL.MALE} 전용</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-semibold text-gray-500 tracking-widest uppercase mb-1">
+                          뷰
+                        </label>
+                        <select
+                          name="view"
+                          defaultValue={p.view}
+                          className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm bg-white focus:border-emerald-400 focus:ring-1 focus:ring-emerald-200 outline-none"
+                        >
+                          <option value="FRONT">정면</option>
+                          <option value="BACK">후면</option>
+                        </select>
                       </div>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-3">
                       <div>
+                        <label className="block text-[11px] font-semibold text-gray-500 tracking-widest uppercase mb-1">
+                          핫스팟 X <span className="text-gray-400 font-normal normal-case">(0~100, 비우면 미표시)</span>
+                        </label>
+                        <input
+                          name="hotspotX"
+                          type="number"
+                          step="0.1"
+                          min="0"
+                          max="100"
+                          defaultValue={p.hotspotX ?? ""}
+                          placeholder="비움"
+                          className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-mono focus:border-emerald-400 focus:ring-1 focus:ring-emerald-200 outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-semibold text-gray-500 tracking-widest uppercase mb-1">
+                          핫스팟 Y <span className="text-gray-400 font-normal normal-case">(0~180)</span>
+                        </label>
+                        <input
+                          name="hotspotY"
+                          type="number"
+                          step="0.1"
+                          min="0"
+                          max="180"
+                          defaultValue={p.hotspotY ?? ""}
+                          placeholder="비움"
+                          className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm font-mono focus:border-emerald-400 focus:ring-1 focus:ring-emerald-200 outline-none"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-[11px] font-semibold text-gray-500 tracking-widest uppercase mb-1">
+                        설명
+                      </label>
+                      <input
+                        name="description"
+                        defaultValue={p.description ?? ""}
+                        placeholder="짧게 한 줄로 이 부위 용도/특징"
+                        className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:border-emerald-400 focus:ring-1 focus:ring-emerald-200 outline-none"
+                      />
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-3">
+                      <div>
                         <label className="block text-[11px] font-semibold text-pink-700 tracking-widest uppercase mb-1">
-                          여성 노트 (femaleNote)
+                          여성 노트
                         </label>
                         <textarea
                           name="femaleNote"
                           defaultValue={p.femaleNote ?? ""}
                           rows={3}
-                          placeholder="여성 관점에서의 보충 설명. 비워두면 표시되지 않음."
+                          placeholder="여성 관점 보충 설명. 비우면 숨김."
                           className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:border-pink-400 focus:ring-1 focus:ring-pink-200 outline-none"
                         />
                       </div>
                       <div>
                         <label className="block text-[11px] font-semibold text-sky-700 tracking-widest uppercase mb-1">
-                          남성 노트 (maleNote)
+                          남성 노트
                         </label>
                         <textarea
                           name="maleNote"
                           defaultValue={p.maleNote ?? ""}
                           rows={3}
-                          placeholder="남성 관점에서의 보충 설명. 비워두면 표시되지 않음."
+                          placeholder="남성 관점 보충 설명. 비우면 숨김."
                           className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:border-sky-400 focus:ring-1 focus:ring-sky-200 outline-none"
                         />
                       </div>
