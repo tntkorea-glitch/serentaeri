@@ -12,8 +12,7 @@ const PHOTO_HOTSPOTS_B = [
   { slug: "intestine", name: "장",   x: 50, y: 72 },
 ];
 
-// 이미지 C (Depositphotos 전신) 핫스팟 — 중앙 인체 기준 (이미지에서 인체가 차지하는 위치 대략)
-// 이미지 전체 비율 기준 (%)
+// 이미지 C (Depositphotos 전신) 핫스팟
 const PHOTO_HOTSPOTS_C = [
   { slug: "scalp",      name: "두피", x: 50, y: 22 },
   { slug: "eye",        name: "눈",   x: 50, y: 25 },
@@ -27,6 +26,21 @@ const PHOTO_HOTSPOTS_C = [
   { slug: "foot",       name: "발",   x: 50, y: 95 },
 ];
 
+// Wikimedia CC0 템플릿 (Mikael Häggström) — 전신 + 장기
+// 이미지 원본 비율 기준 핫스팟 (%)
+const WIKI_MALE_HOTSPOTS = [
+  { slug: "scalp",      name: "두피", x: 48, y: 5 },
+  { slug: "eye",        name: "눈",   x: 48, y: 9 },
+  { slug: "neck",       name: "목",   x: 48, y: 17 },
+  { slug: "lung",       name: "폐",   x: 42, y: 28 },
+  { slug: "heart",      name: "심장", x: 52, y: 30 },
+  { slug: "liver",      name: "간",   x: 42, y: 40 },
+  { slug: "stomach",    name: "위",   x: 53, y: 42 },
+  { slug: "intestine",  name: "장",   x: 48, y: 52 },
+  { slug: "knee",       name: "무릎", x: 45, y: 80 },
+  { slug: "foot",       name: "발",   x: 47, y: 96 },
+];
+
 export default async function BodyMapComparePage() {
   const parts = await prisma.bodyPart.findMany({ orderBy: { order: "asc" } });
 
@@ -37,10 +51,10 @@ export default async function BodyMapComparePage() {
           STYLE COMPARE
         </div>
         <h1 className="text-2xl md:text-3xl font-extrabold mb-2">
-          인체맵 스타일 3가지 비교
+          인체맵 스타일 비교
         </h1>
         <p className="text-sm text-gray-500">
-          어떤 느낌으로 갈지 골라줘. A는 지금 쓸 수 있고, B·C는 레퍼런스.
+          A/B/C + Wikimedia CC0 후보들. 어떤 느낌으로 갈지 골라줘.
         </p>
       </header>
 
@@ -146,30 +160,166 @@ export default async function BodyMapComparePage() {
         </section>
       </div>
 
-      <div className="mt-10 rounded-xl bg-amber-50 border border-amber-200 p-6">
-        <h3 className="text-base font-bold text-amber-900 mb-3">어떻게 할까?</h3>
-        <div className="space-y-2 text-sm text-amber-900 leading-relaxed">
-          <p>
-            <strong>① A 그대로 쓰기</strong> — 지금 바로 출시 가능. 나중에 C처럼
-            정교한 버전으로 교체 가능.
+      {/* ======== 신규: Option 4 (Wikimedia CC0) ======== */}
+      <div className="mt-12 mb-6">
+        <div className="inline-block text-xs font-semibold tracking-widest text-sky-700 bg-sky-100 px-2.5 py-1 rounded-full mb-2">
+          NEW · OPTION 4
+        </div>
+        <h2 className="text-xl md:text-2xl font-extrabold">
+          Wikimedia Commons CC0 공개도메인 후보
+        </h2>
+        <p className="text-sm text-gray-500 mt-1">
+          Mikael Häggström 작 · CC0 1.0 (저작권 없음, 자유롭게 수정/상업이용 가능) · 이미지에 박힌 텍스트는 전부 &quot;Example text&quot; 플레이스홀더라 무시/삭제 가능
+        </p>
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-6">
+        {/* D-1: Wikimedia Male */}
+        <section className="bg-white rounded-2xl border border-sky-200 p-5">
+          <div className="text-xs text-sky-700 font-bold tracking-wider mb-1">
+            OPTION 4-A · 남성 전신
+          </div>
+          <h3 className="text-lg font-bold mb-1">Wikimedia 남성 템플릿</h3>
+          <p className="text-[11px] text-gray-500 mb-4">
+            전신 + 장기 · CC0 · 1363×1211
           </p>
-          <p>
-            <strong>② C 스타일 라이선스 구매 후 사용</strong> — Depositphotos에서
-            구매(~$15~30) → 라벨 없는 버전 받기 → 영어 라벨 포토샵으로 제거 또는
-            라벨 없는 원본 요청.
+          <div
+            className="relative w-full max-w-[240px] mx-auto bg-white rounded-lg overflow-hidden mb-4"
+            style={{ aspectRatio: "1363 / 1211" }}
+          >
+            <Image
+              src="/body-candidates/male-organs.svg"
+              alt="Wikimedia CC0 male template"
+              fill
+              className="object-contain"
+              unoptimized
+            />
+            {WIKI_MALE_HOTSPOTS.map((h) => (
+              <Link
+                key={h.slug}
+                href={`/body-map/${h.slug}`}
+                className="group absolute -translate-x-1/2 -translate-y-1/2 z-10"
+                style={{ left: `${h.x}%`, top: `${h.y}%` }}
+              >
+                <span className="absolute inset-0 -m-1 rounded-full bg-sky-400 opacity-70 animate-ping" />
+                <span className="relative block w-3 h-3 rounded-full bg-sky-500 border-2 border-white shadow-md" />
+              </Link>
+            ))}
+          </div>
+          <ul className="text-[11px] text-gray-600 space-y-0.5">
+            <li>✓ 전신 + 주요 장기 (뇌/심장/폐/간/위/장/신장)</li>
+            <li>✓ CC0 — 상업이용/수정 100% 자유</li>
+            <li>✓ 영어 라벨조차 없음 (플레이스홀더만)</li>
+            <li>△ 화면 비율이 옆으로 넓음 (인체 왼쪽 + 라벨 공간 오른쪽)</li>
+            <li>△ 인체 부분만 잘라내는 후처리 필요</li>
+          </ul>
+        </section>
+
+        {/* D-2: Wikimedia Female */}
+        <section className="bg-white rounded-2xl border border-sky-200 p-5">
+          <div className="text-xs text-sky-700 font-bold tracking-wider mb-1">
+            OPTION 4-B · 여성 전신
+          </div>
+          <h3 className="text-lg font-bold mb-1">Wikimedia 여성 템플릿</h3>
+          <p className="text-[11px] text-gray-500 mb-4">
+            전신 + 장기 · CC0 · 1454×2320
           </p>
-          <p>
-            <strong>③ C 스타일을 자체 SVG로 재현</strong> — 시간 3~5시간, 결과물은
-            저작권 100% 우리 것. A보다 훨씬 정교하게 다듬음.
+          <div
+            className="relative w-full max-w-[240px] mx-auto bg-white rounded-lg overflow-hidden mb-4"
+            style={{ aspectRatio: "1454 / 2320" }}
+          >
+            <Image
+              src="/body-candidates/female-organs.svg"
+              alt="Wikimedia CC0 female template"
+              fill
+              className="object-contain"
+              unoptimized
+            />
+          </div>
+          <ul className="text-[11px] text-gray-600 space-y-0.5">
+            <li>✓ 세로 비율이 전신에 더 적합</li>
+            <li>✓ CC0 — 자유 사용</li>
+            <li>✓ 가장 널리 쓰이는 표준 템플릿 (100+ 파생작)</li>
+            <li>△ 여성 전용 — 남녀 공용인지 결정 필요</li>
+          </ul>
+        </section>
+
+        {/* D-3: Internal organs only */}
+        <section className="bg-white rounded-2xl border border-sky-200 p-5">
+          <div className="text-xs text-sky-700 font-bold tracking-wider mb-1">
+            OPTION 4-C · 장기만
+          </div>
+          <h3 className="text-lg font-bold mb-1">장기 단독 (Internal organs)</h3>
+          <p className="text-[11px] text-gray-500 mb-4">
+            장기 클로즈업 · CC0 · 1363×1212
           </p>
-          <p>
-            <strong>④ Wikimedia/공개 이미지 탐색</strong> — CC0 라이선스 전신
-            해부도 찾아 사용. 운에 따라 품질 차이.
+          <div
+            className="relative w-full max-w-[240px] mx-auto bg-white rounded-lg overflow-hidden mb-4"
+            style={{ aspectRatio: "1363 / 1212" }}
+          >
+            <Image
+              src="/body-candidates/internal-organs.svg"
+              alt="Wikimedia CC0 internal organs"
+              fill
+              className="object-contain"
+              unoptimized
+            />
+          </div>
+          <ul className="text-[11px] text-gray-600 space-y-0.5">
+            <li>✓ 장기 디테일 최상급</li>
+            <li>✓ CC0 — 자유 사용</li>
+            <li>× 전신 실루엣 없음 (흉복부 단면만)</li>
+            <li>△ 자체 SVG 실루엣과 합성하면 A보다 훨씬 사실적</li>
+          </ul>
+        </section>
+      </div>
+
+      {/* ======== OPTION 3 설명 ======== */}
+      <div className="mt-12 mb-6">
+        <div className="inline-block text-xs font-semibold tracking-widest text-purple-700 bg-purple-100 px-2.5 py-1 rounded-full mb-2">
+          OPTION 3 · 계획
+        </div>
+        <h2 className="text-xl md:text-2xl font-extrabold">
+          C 스타일을 자체 SVG로 재현
+        </h2>
+        <p className="text-sm text-gray-500 mt-1">
+          Depositphotos 스타일의 사실적 전신 해부도를 직접 그려서 저작권 100% 우리 것.
+        </p>
+      </div>
+
+      <div className="bg-purple-50 border border-purple-200 rounded-2xl p-6 space-y-4">
+        <div>
+          <h4 className="text-sm font-bold text-purple-900 mb-1">작업 범위</h4>
+          <ul className="text-sm text-purple-900 space-y-1 list-disc list-inside">
+            <li>현재 <code>HumanSilhouette.tsx</code> 업그레이드 — 근육 음영 + 피부 그라데이션 강화</li>
+            <li>장기 재그리기: 심장(심방/심실 분리) / 폐(기관지 트리 표현) / 간(좌엽/우엽) / 위(곡선) / 소장·대장(구불구불) / 신장(콩팥 형태) / 뇌(측면 컷)</li>
+            <li>장기별 Path 정교화 — 현재 단순 타원에서 해부학적 실루엣으로</li>
+            <li>라벨 없음 (핫스팟으로 대체)</li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="text-sm font-bold text-purple-900 mb-1">예상 시간</h4>
+          <p className="text-sm text-purple-900">3~5시간. 장기 1개당 30~60분.</p>
+        </div>
+        <div>
+          <h4 className="text-sm font-bold text-purple-900 mb-1">장단점</h4>
+          <ul className="text-sm text-purple-900 space-y-0.5">
+            <li>✓ 저작권 100% 우리 것, 영구 사용</li>
+            <li>✓ 브랜드 톤(세련된 자연/한방)에 맞춤 가능</li>
+            <li>✓ 핫스팟 23개 정확히 배치 가능</li>
+            <li>× 시간 투자 3~5시간</li>
+            <li>× 4-B(Wikimedia CC0)보다 더 나은지는 실제로 그려봐야 앎</li>
+          </ul>
+        </div>
+        <div className="pt-3 border-t border-purple-300">
+          <h4 className="text-sm font-bold text-purple-900 mb-1">추천 순서</h4>
+          <p className="text-sm text-purple-900">
+            <strong>4-B (Wikimedia 여성 CC0)</strong> 을 먼저 붙여보고, 느낌이 별로면 Option 3로 자체 드로잉. 4-B는 이미 다운로드 완료라 5분이면 붙일 수 있음.
           </p>
         </div>
       </div>
 
-      <div className="mt-4 text-center">
+      <div className="mt-10 text-center">
         <Link
           href="/body-map"
           className="inline-block text-sm text-gray-500 hover:text-gray-900"
