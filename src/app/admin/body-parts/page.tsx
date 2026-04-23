@@ -4,8 +4,17 @@ import {
   BODY_PART_GENDER_LABEL,
   BODY_VIEW_LABEL,
 } from "@/lib/constants";
-import { seedBodyPartsAction, updateBodyPartGenderAction } from "./actions";
+import {
+  createBodyPartAction,
+  deleteBodyPartAction,
+  seedBodyPartsAction,
+  updateBodyPartGenderAction,
+} from "./actions";
 import { BODY_PART_SEED } from "./seed-data";
+
+const CATEGORY_OPTIONS = Object.entries(BODY_PART_CATEGORY_LABEL) as Array<
+  [keyof typeof BODY_PART_CATEGORY_LABEL, string]
+>;
 
 export default async function AdminBodyPartsPage() {
   const parts = await prisma.bodyPart.findMany({
