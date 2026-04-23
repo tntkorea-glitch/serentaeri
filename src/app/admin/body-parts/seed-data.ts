@@ -37,9 +37,16 @@ export const BODY_PART_SEED: BodyPartSeed[] = [
   { slug: "intestine",  name: "장 · 복부",   category: "DIGESTIVE", view: "FRONT", hotspotX: 50, hotspotY: 82, order: 220, description: "장 움직임, 가스, 변비" },
 
   // 하체 (LOWER)
-  { slug: "lower-back", name: "허리",        category: "LOWER", view: "FRONT", hotspotX: 50, hotspotY: 90,  order: 300, description: "허리 통증, 피로" },
+  { slug: "lower-back", name: "허리",        category: "LOWER", view: "FRONT", hotspotX: 50, hotspotY: 90,  order: 300, description: "허리 통증, 피로",
+    femaleNote: "여성은 생리 기간·PMS 중 하복부와 연결된 허리 불편이 함께 오는 경우가 많아, 따뜻한 마사지 오일과 온찜질을 병행합니다.",
+    maleNote: "남성은 장시간 앉은 자세·운동 후 하부 척추 긴장이 주 원인이며, 롤온·국소도포로 집중 완화합니다." },
   { slug: "knee",       name: "무릎",        category: "LOWER", view: "FRONT", hotspotX: 41, hotspotY: 128, order: 310, description: "무릎 관절, 쑤심" },
   { slug: "foot",       name: "발",          category: "LOWER", view: "FRONT", hotspotX: 42, hotspotY: 172, order: 320, description: "발 피로, 부종, 발냄새" },
+
+  // 여성/남성 전용 (예시)
+  { slug: "menstrual",  name: "생리·PMS",    category: "LOWER", view: "FRONT", hotspotX: null, hotspotY: null, order: 330, description: "주기 관련 하복부 긴장, 기분 기복", gender: "FEMALE" },
+  { slug: "menopause",  name: "갱년기",      category: "EMOTION", view: "FRONT", hotspotX: null, hotspotY: null, order: 340, description: "열오름·수면·기분 변화 케어", gender: "FEMALE" },
+  { slug: "prostate",   name: "전립선·요로", category: "LOWER", view: "FRONT", hotspotX: null, hotspotY: null, order: 350, description: "하복부 불편, 빈뇨 등 일반 케어", gender: "MALE" },
 
   // 피부 (SKIN) — 위치 없는 것 (전신)
   { slug: "body-skin",  name: "전신 피부",   category: "SKIN", view: "FRONT", hotspotX: null, hotspotY: null, order: 400, description: "건조, 가려움, 탄력" },
