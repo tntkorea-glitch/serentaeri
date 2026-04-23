@@ -159,7 +159,7 @@ export default async function AdminBodyPartsPage() {
                   type="number"
                   step="0.1"
                   min="0"
-                  max="180"
+                  max="100"
                   placeholder="비움"
                   className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:border-emerald-400 focus:ring-1 focus:ring-emerald-200 outline-none"
                 />
