@@ -38,24 +38,22 @@ export default function BodyMapWiki({ parts, activeSlug, gender }: Props) {
         priority
       />
 
-      {/* 남성 모드: 얼굴 영역에 남성 포토리얼 헤드 오버레이 */}
+      {/* 남성 모드: 여성 얼굴 영역에 남성 포토리얼 얼굴 오버레이 */}
       {gender === "male" && (
         <div
-          className="absolute left-0 right-0 overflow-hidden pointer-events-none"
-          style={{ top: "0.5%", height: "16.5%" }}
+          className="absolute pointer-events-none"
+          style={{
+            left: "27%",
+            top: "1.5%",
+            width: "24%",
+            height: "14%",
+          }}
         >
           <Image
-            src="/body-wikimedia-male-photo.svg"
+            src="/body-wikimedia-male-face.svg"
             alt=""
-            width={820}
-            height={1211}
-            className="absolute select-none"
-            style={{
-              width: "150%",
-              left: "-25%",
-              top: "-2%",
-              maxWidth: "none",
-            }}
+            fill
+            className="object-contain select-none"
             unoptimized
           />
         </div>
