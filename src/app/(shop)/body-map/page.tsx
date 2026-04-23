@@ -84,26 +84,15 @@ export default async function BodyMapPage() {
       </div>
 
       <p className="mt-4 text-[11px] text-gray-400 text-center leading-relaxed">
-        인체 일러스트: Wikimedia Commons ·
-        {" "}
+        인체 일러스트:{" "}
         <a
           href="https://commons.wikimedia.org/wiki/File:Female_template_with_organs.svg"
           target="_blank"
           rel="noopener noreferrer"
           className="underline hover:text-gray-600"
         >
-          여성 템플릿 (CC0)
+          Wikimedia Commons (CC0) · Mikael Häggström
         </a>
-        {" · "}
-        <a
-          href="https://commons.wikimedia.org/wiki/File:202403_human_anatomy_organs.svg"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline hover:text-gray-600"
-        >
-          남성 템플릿 (CC-BY 4.0)
-        </a>
-        {" by Mikael Häggström"}
       </p>
     </div>
   );
