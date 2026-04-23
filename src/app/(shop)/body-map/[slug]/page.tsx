@@ -2,9 +2,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import BodyMap from "@/components/body-map/BodyMap";
+import BodyMap from "@/components/body-map/BodyMapWiki";
 import {
   BODY_PART_CATEGORY_LABEL,
+  BODY_PART_GENDER_LABEL,
   RECIPE_USAGE_LABEL,
   formatKRW,
 } from "@/lib/constants";
