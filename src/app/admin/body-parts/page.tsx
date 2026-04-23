@@ -336,13 +336,31 @@ export default async function AdminBodyPartsPage() {
                       </div>
                     </div>
 
-                    <div className="flex justify-end">
+                    <div className="flex justify-between items-center pt-1">
                       <button
                         type="submit"
                         className="px-4 h-9 bg-gray-900 text-white text-sm font-semibold rounded-lg hover:bg-gray-800"
                       >
                         저장
                       </button>
+
+                      {p._count.recipes === 0 ? (
+                        <button
+                          type="submit"
+                          formAction={async () => {
+                            "use server";
+                            await deleteBodyPartAction(p.id);
+                          }}
+                          formNoValidate
+                          className="px-3 h-9 text-xs font-semibold text-red-700 border border-red-200 rounded-lg hover:bg-red-50"
+                        >
+                          이 부위 삭제
+                        </button>
+                      ) : (
+                        <span className="text-[11px] text-gray-400">
+                          레시피 {p._count.recipes}개 연결되어 삭제 불가
+                        </span>
+                      )}
                     </div>
                   </form>
                 </div>
