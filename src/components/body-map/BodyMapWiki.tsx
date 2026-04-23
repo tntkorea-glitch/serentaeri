@@ -11,8 +11,8 @@ type Props = {
 };
 
 // 좌표는 DB(BodyPart.hotspotX / hotspotY) 퍼센트값(0~100)을 단일 소스로 사용.
-// 남성 모드는 "여성 본체 + 남성 얼굴 오버레이" 합성. 장기 차이가 있을 경우
-// /body-map/[slug] 에서 성별별 노트로 구분 안내.
+// 남/여 이미지는 동일 포즈·크기·톤이라 좌표 한 세트로 공용.
+// 부위별 성차는 BodyPart.gender(BOTH/FEMALE/MALE) 필터로 분리.
 export default function BodyMapWiki({ parts, activeSlug, gender }: Props) {
   const mapped = parts
     .filter((p) => p.hotspotX !== null && p.hotspotY !== null)
@@ -23,41 +23,21 @@ export default function BodyMapWiki({ parts, activeSlug, gender }: Props) {
       return true;
     });
 
+  const src = gender === "male" ? "/body-male.png" : "/body-female.png";
+
   return (
     <div
       className="relative mx-auto w-full max-w-[360px]"
-      style={{ aspectRatio: "1454 / 2320" }}
+      style={{ aspectRatio: "941 / 1672" }}
     >
-      {/* 본체: 여성 포토리얼 전신 (남녀 공용) */}
       <Image
-        src="/body-wikimedia-female.svg"
+        src={src}
         alt="인체맵"
         fill
         className="object-contain select-none pointer-events-none"
         unoptimized
         priority
       />
-
-      {/* 남성 모드: 여성 얼굴 영역에 남성 포토리얼 얼굴 오버레이 */}
-      {gender === "male" && (
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: "27%",
-            top: "1.5%",
-            width: "24%",
-            height: "14%",
-          }}
-        >
-          <Image
-            src="/body-wikimedia-male-face.svg"
-            alt=""
-            fill
-            className="object-contain select-none"
-            unoptimized
-          />
-        </div>
-      )}
 
       {mapped.map((p) => {
         const x = p.hotspotX ?? 50;
