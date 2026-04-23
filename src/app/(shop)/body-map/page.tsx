@@ -82,6 +82,29 @@ export default async function BodyMapPage() {
         일반 정보이며, 의학적 진단·치료·예방을 대체하지 않습니다. 건강상 우려가
         있으면 반드시 의료 전문가와 상의하세요.
       </div>
+
+      <p className="mt-4 text-[11px] text-gray-400 text-center leading-relaxed">
+        인체 일러스트: Wikimedia Commons ·
+        {" "}
+        <a
+          href="https://commons.wikimedia.org/wiki/File:Female_template_with_organs.svg"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-gray-600"
+        >
+          여성 템플릿 (CC0)
+        </a>
+        {" · "}
+        <a
+          href="https://commons.wikimedia.org/wiki/File:202403_human_anatomy_organs.svg"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-gray-600"
+        >
+          남성 템플릿 (CC-BY 4.0)
+        </a>
+        {" by Mikael Häggström"}
+      </p>
     </div>
   );
 }
