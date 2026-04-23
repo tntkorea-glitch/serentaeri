@@ -6,7 +6,15 @@ import type { BodyPartCategory } from "@prisma/client";
 
 const LISTED_CATEGORIES: BodyPartCategory[] = ["EMOTION", "SKIN"];
 
-export default async function BodyMapPage() {
+export default async function BodyMapPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ gender?: string }>;
+}) {
+  const { gender: genderParam } = await searchParams;
+  const gender: "female" | "male" =
+    genderParam === "male" ? "male" : "female";
+
   const parts = await prisma.bodyPart.findMany({
     orderBy: { order: "asc" },
     include: { _count: { select: { recipes: true } } },
