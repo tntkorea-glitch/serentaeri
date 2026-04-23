@@ -51,7 +51,7 @@ export const BODY_PART_SEED: BodyPartSeed[] = [
 
   // 피부 (SKIN) — 위치 없는 것 (전신)
   { slug: "body-skin",  name: "전신 피부",   category: "SKIN", view: "FRONT", hotspotX: null, hotspotY: null, order: 400, description: "건조, 가려움, 탄력" },
-  { slug: "hand-skin",  name: "손 피부",     category: "SKIN", view: "FRONT", hotspotX: 15,   hotspotY: 47,   order: 410, description: "손 건조, 주름" },
+  { slug: "hand-skin",  name: "손 피부",     category: "SKIN", view: "FRONT", hotspotX: 23, hotspotY: 53, order: 410, description: "손 건조, 주름" },
 
   // 정서/수면 (EMOTION) — 위치 없음
   { slug: "sleep",      name: "수면",        category: "EMOTION", view: "FRONT", hotspotX: null, hotspotY: null, order: 500, description: "잠들기, 숙면, 깊은 휴식" },
