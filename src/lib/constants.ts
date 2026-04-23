@@ -33,6 +33,12 @@ export const BODY_VIEW_LABEL: Record<BodyView, string> = {
   BACK: "후면",
 };
 
+export const BODY_PART_GENDER_LABEL: Record<BodyPartGender, string> = {
+  BOTH: "남녀 공통",
+  FEMALE: "여성",
+  MALE: "남성",
+};
+
 export const ORDER_STATUS_LABEL: Record<OrderStatus, string> = {
   PENDING: "결제 대기",
   PAID: "결제 완료",
