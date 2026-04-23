@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { BodyPart } from "@prisma/client";
 import BodyMapWiki from "./BodyMapWiki";
 
@@ -15,7 +15,19 @@ export default function BodyMapSection({
   activeSlug?: string;
   initialGender?: Gender;
 }) {
-  const [gender, setGender] = useState<Gender>(initialGender);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const rawGender = searchParams.get("gender");
+  const gender: Gender =
+    rawGender === "male" ? "male" : rawGender === "female" ? "female" : initialGender;
+
+  const setGender = (next: Gender) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("gender", next);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
 
   return (
     <div>
@@ -48,7 +60,11 @@ export default function BodyMapSection({
         </div>
       </div>
 
-      <BodyMapWiki parts={parts} activeSlug={activeSlug} gender={gender} />
+      <BodyMapWiki
+        parts={parts}
+        activeSlug={activeSlug}
+        gender={gender}
+      />
     </div>
   );
 }
