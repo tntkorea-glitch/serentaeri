@@ -2,23 +2,33 @@ import Link from "next/link";
 import Image from "next/image";
 import type { BodyPart } from "@prisma/client";
 
+type Gender = "female" | "male";
+
 type Props = {
   parts: BodyPart[];
   activeSlug?: string;
+  gender: Gender;
 };
 
-// 모든 핫스팟 좌표는 DB(BodyPart.hotspotX / hotspotY) 를 단일 소스로 사용한다.
-// X: 0~100 (%), Y: 0~100 (%). 수정은 /admin/body-parts 에서.
-export default function BodyMapWiki({ parts, activeSlug }: Props) {
-  const mapped = parts.filter(
-    (p) => p.hotspotX !== null && p.hotspotY !== null
-  );
+// 좌표는 DB(BodyPart.hotspotX / hotspotY) 퍼센트값(0~100)을 단일 소스로 사용.
+// 남성 모드는 "여성 본체 + 남성 얼굴 오버레이" 합성. 장기 차이가 있을 경우
+// /body-map/[slug] 에서 성별별 노트로 구분 안내.
+export default function BodyMapWiki({ parts, activeSlug, gender }: Props) {
+  const mapped = parts
+    .filter((p) => p.hotspotX !== null && p.hotspotY !== null)
+    .filter((p) => {
+      if (p.gender === "BOTH") return true;
+      if (p.gender === "FEMALE") return gender === "female";
+      if (p.gender === "MALE") return gender === "male";
+      return true;
+    });
 
   return (
     <div
       className="relative mx-auto w-full max-w-[360px]"
       style={{ aspectRatio: "1454 / 2320" }}
     >
+      {/* 본체: 여성 포토리얼 전신 (남녀 공용) */}
       <Image
         src="/body-wikimedia-female.svg"
         alt="인체맵"
@@ -27,6 +37,29 @@ export default function BodyMapWiki({ parts, activeSlug }: Props) {
         unoptimized
         priority
       />
+
+      {/* 남성 모드: 얼굴 영역에 남성 포토리얼 헤드 오버레이 */}
+      {gender === "male" && (
+        <div
+          className="absolute left-0 right-0 overflow-hidden pointer-events-none"
+          style={{ top: "0.5%", height: "16.5%" }}
+        >
+          <Image
+            src="/body-wikimedia-male-photo.svg"
+            alt=""
+            width={820}
+            height={1211}
+            className="absolute select-none"
+            style={{
+              width: "150%",
+              left: "-25%",
+              top: "-2%",
+              maxWidth: "none",
+            }}
+            unoptimized
+          />
+        </div>
+      )}
 
       {mapped.map((p) => {
         const x = p.hotspotX ?? 50;
