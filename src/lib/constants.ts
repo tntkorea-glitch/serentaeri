@@ -1,4 +1,4 @@
-import type { ProductCategory, RecipeUsage, BodyPartCategory, BodyView, OrderStatus, UserRole } from "@prisma/client";
+import type { ProductCategory, RecipeUsage, BodyPartCategory, BodyView, BodyPartGender, OrderStatus, UserRole } from "@prisma/client";
 
 export const PRODUCT_CATEGORY_LABEL: Record<ProductCategory, string> = {
   SINGLE_OIL: "싱글 에센셜 오일",
