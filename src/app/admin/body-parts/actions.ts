@@ -97,3 +97,59 @@ export async function deleteBodyPartAction(id: string) {
   revalidatePath("/admin/body-parts");
   revalidatePath("/body-map");
 }
+
+export async function createBodyPartAction(formData: FormData) {
+  await requireAdmin();
+
+  const slug = String(formData.get("slug") ?? "").trim().toLowerCase();
+  const name = String(formData.get("name") ?? "").trim();
+  const categoryRaw = String(formData.get("category") ?? "") as BodyPartCategory;
+  const viewRaw = String(formData.get("view") ?? "FRONT") as BodyView;
+  const genderRaw = String(formData.get("gender") ?? "BOTH") as BodyPartGender;
+  const description = String(formData.get("description") ?? "").trim();
+  const maleNote = String(formData.get("maleNote") ?? "").trim();
+  const femaleNote = String(formData.get("femaleNote") ?? "").trim();
+  const hotspotX = parseOptionalNumber(formData.get("hotspotX"));
+  const hotspotY = parseOptionalNumber(formData.get("hotspotY"));
+
+  if (!slug || !name) {
+    throw new Error("슬러그와 이름은 필수입니다.");
+  }
+  if (!/^[a-z0-9-]+$/.test(slug)) {
+    throw new Error("슬러그는 영소문자/숫자/하이픈만 허용됩니다.");
+  }
+  if (!CATEGORIES.includes(categoryRaw)) {
+    throw new Error("카테고리 값이 올바르지 않습니다.");
+  }
+
+  const existing = await prisma.bodyPart.findUnique({ where: { slug } });
+  if (existing) {
+    throw new Error(`이미 존재하는 슬러그입니다: ${slug}`);
+  }
+
+  const maxOrder = await prisma.bodyPart.aggregate({
+    where: { category: categoryRaw },
+    _max: { order: true },
+  });
+  const nextOrder = (maxOrder._max.order ?? 0) + 10;
+
+  await prisma.bodyPart.create({
+    data: {
+      slug,
+      name,
+      category: categoryRaw,
+      view: VIEWS.includes(viewRaw) ? viewRaw : "FRONT",
+      gender: GENDERS.includes(genderRaw) ? genderRaw : "BOTH",
+      description: description === "" ? null : description,
+      maleNote: maleNote === "" ? null : maleNote,
+      femaleNote: femaleNote === "" ? null : femaleNote,
+      hotspotX,
+      hotspotY,
+      order: nextOrder,
+    },
+  });
+
+  revalidatePath("/admin/body-parts");
+  revalidatePath("/body-map");
+  redirect("/admin/body-parts");
+}
