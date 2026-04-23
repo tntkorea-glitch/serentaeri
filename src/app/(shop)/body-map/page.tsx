@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import BodyMapSection from "@/components/body-map/BodyMapSection";
+import BodyMap from "@/components/body-map/BodyMapWiki";
 import { BODY_PART_CATEGORY_LABEL } from "@/lib/constants";
 import type { BodyPartCategory } from "@prisma/client";
 
