@@ -58,8 +58,21 @@ export default async function BodyMapPage() {
                         href={`/body-map/${p.slug}`}
                         className="rounded-xl border border-gray-200 bg-white p-4 hover:border-gray-900 hover:shadow-sm transition"
                       >
-                        <div className="font-semibold text-gray-900 text-sm mb-1">
-                          {p.name}
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <span className="font-semibold text-gray-900 text-sm">
+                            {p.name}
+                          </span>
+                          {p.gender !== "BOTH" && (
+                            <span
+                              className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${
+                                p.gender === "FEMALE"
+                                  ? "bg-pink-100 text-pink-700"
+                                  : "bg-sky-100 text-sky-700"
+                              }`}
+                            >
+                              {p.gender === "FEMALE" ? "여성" : "남성"}
+                            </span>
+                          )}
                         </div>
                         <div className="text-xs text-gray-500 line-clamp-2">
                           {p.description}
