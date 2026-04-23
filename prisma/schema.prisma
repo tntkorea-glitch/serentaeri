@@ -116,6 +116,9 @@ model BodyPart {
   hotspotY    Float?
   view        BodyView         @default(FRONT)
   order       Int              @default(0)
+  gender      BodyPartGender   @default(BOTH)
+  maleNote    String?          @db.Text
+  femaleNote  String?          @db.Text
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
 
