@@ -1,4 +1,4 @@
-import type { BodyPartCategory, BodyView } from "@prisma/client";
+import type { BodyPartCategory, BodyPartGender, BodyView } from "@prisma/client";
 
 export type BodyPartSeed = {
   slug: string;
@@ -9,6 +9,9 @@ export type BodyPartSeed = {
   hotspotY: number | null;
   description: string;
   order: number;
+  gender?: BodyPartGender;
+  maleNote?: string | null;
+  femaleNote?: string | null;
 };
 
 // 좌표는 SVG viewBox "0 0 100 180" 기준 (x: 0~100, y: 0~180)
