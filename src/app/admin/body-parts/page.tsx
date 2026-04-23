@@ -8,7 +8,7 @@ import {
   createBodyPartAction,
   deleteBodyPartAction,
   seedBodyPartsAction,
-  updateBodyPartGenderAction,
+  updateBodyPartAction,
 } from "./actions";
 import { BODY_PART_SEED } from "./seed-data";
 
