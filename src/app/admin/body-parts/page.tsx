@@ -152,7 +152,7 @@ export default async function AdminBodyPartsPage() {
               </div>
               <div>
                 <label className="block text-[11px] font-semibold text-gray-500 tracking-widest uppercase mb-1">
-                  핫스팟 Y <span className="text-gray-400 font-normal normal-case">(0~180)</span>
+                  핫스팟 Y <span className="text-gray-400 font-normal normal-case">(0~100, 비우면 미표시)</span>
                 </label>
                 <input
                   name="hotspotY"
@@ -376,7 +376,7 @@ export default async function AdminBodyPartsPage() {
                       </div>
                       <div>
                         <label className="block text-[11px] font-semibold text-gray-500 tracking-widest uppercase mb-1">
-                          핫스팟 Y <span className="text-gray-400 font-normal normal-case">(0~180)</span>
+                          핫스팟 Y <span className="text-gray-400 font-normal normal-case">(0~100, 비우면 미표시)</span>
                         </label>
                         <input
                           name="hotspotY"
