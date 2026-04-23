@@ -2,15 +2,16 @@ import Link from "next/link";
 import Image from "next/image";
 import type { BodyPart } from "@prisma/client";
 
+type Gender = "female" | "male";
+
 type Props = {
   parts: BodyPart[];
   activeSlug?: string;
+  gender: Gender;
 };
 
-// Wikimedia CC0 female template (1454 x 2320) 기준으로 튜닝된 핫스팟 좌표 (%)
-// 좌표가 기존 DB(0-100 x 0-180 viewBox)와 달라서, slug별로 오버라이드한다.
-// 맞지 않는 slug는 기본 % 변환 (hotspotX, hotspotY/180*100)으로 fallback.
-const WIKI_OVERRIDES: Record<string, { x: number; y: number }> = {
+// Wikimedia CC0 female template (1454 x 2320) 기준 핫스팟 좌표 (%)
+const FEMALE_OVERRIDES: Record<string, { x: number; y: number }> = {
   scalp:      { x: 38, y: 5 },
   eye:        { x: 38, y: 9 },
   ear:        { x: 33, y: 10 },
@@ -31,7 +32,47 @@ const WIKI_OVERRIDES: Record<string, { x: number; y: number }> = {
   foot:       { x: 38, y: 96 },
 };
 
-export default function BodyMapWiki({ parts, activeSlug }: Props) {
+// Wikimedia CC0 male template (viewBox 크롭 820 x 1211) 기준 핫스팟 좌표 (%)
+// 초기 추정치. 추후 정교하게 조정 예정.
+const MALE_OVERRIDES: Record<string, { x: number; y: number }> = {
+  scalp:      { x: 50, y: 5 },
+  eye:        { x: 50, y: 10 },
+  ear:        { x: 43, y: 12 },
+  nose:       { x: 50, y: 13 },
+  mouth:      { x: 50, y: 16 },
+  "face-skin": { x: 50, y: 10 },
+  neck:       { x: 50, y: 20 },
+  shoulder:   { x: 34, y: 26 },
+  lung:       { x: 42, y: 34 },
+  heart:      { x: 54, y: 36 },
+  arm:        { x: 24, y: 42 },
+  stomach:    { x: 55, y: 47 },
+  liver:      { x: 42, y: 46 },
+  intestine:  { x: 50, y: 56 },
+  "lower-back": { x: 50, y: 62 },
+  "hand-skin": { x: 18, y: 60 },
+  knee:       { x: 46, y: 82 },
+  foot:       { x: 48, y: 97 },
+};
+
+const GENDER_CONFIG: Record<
+  Gender,
+  { src: string; aspectRatio: string; overrides: Record<string, { x: number; y: number }> }
+> = {
+  female: {
+    src: "/body-wikimedia-female.svg",
+    aspectRatio: "1454 / 2320",
+    overrides: FEMALE_OVERRIDES,
+  },
+  male: {
+    src: "/body-wikimedia-male.svg",
+    aspectRatio: "820 / 1211",
+    overrides: MALE_OVERRIDES,
+  },
+};
+
+export default function BodyMapWiki({ parts, activeSlug, gender }: Props) {
+  const config = GENDER_CONFIG[gender];
   const mapped = parts.filter(
     (p) => p.hotspotX !== null && p.hotspotY !== null
   );
@@ -39,10 +80,10 @@ export default function BodyMapWiki({ parts, activeSlug }: Props) {
   return (
     <div
       className="relative mx-auto w-full max-w-[360px]"
-      style={{ aspectRatio: "1454 / 2320" }}
+      style={{ aspectRatio: config.aspectRatio }}
     >
       <Image
-        src="/body-wikimedia.svg"
+        src={config.src}
         alt="인체맵"
         fill
         className="object-contain select-none pointer-events-none"
@@ -51,7 +92,7 @@ export default function BodyMapWiki({ parts, activeSlug }: Props) {
       />
 
       {mapped.map((p) => {
-        const override = WIKI_OVERRIDES[p.slug];
+        const override = config.overrides[p.slug];
         const x = override ? override.x : (p.hotspotX ?? 50);
         const y = override
           ? override.y
